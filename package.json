@@ -1,0 +1,26 @@
+{
+  "name": "webapp-backend",
+  "version": "1.0.0",
+  "description": "Backend development with Node.js for the webapp project",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-EI1039EI1048-202223/webapp-backend.git"
+  },
+  "author": "\"Yeray Boix, Pablo Gozalbo, Alvaro Morales, Marc Navarro\"",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/Team-EI1039EI1048-202223/webapp-backend/issues"
+  },
+  "homepage": "https://github.com/Team-EI1039EI1048-202223/webapp-backend#readme",
+  "devDependencies": {
+    "jasmine": "^4.5.0",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "npm": "^8.19.2"
+  }
+}
