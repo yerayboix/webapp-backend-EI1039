@@ -4,6 +4,8 @@
   "description": "Backend development with Node.js for the webapp project",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
     "test": "npx jasmine"
   },
   "repository": {
