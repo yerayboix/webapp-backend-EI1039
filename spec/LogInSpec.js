@@ -1,5 +1,6 @@
 import { AuthManager } from "../lib/model/AuthManager.js";
 import { UserManager } from "../lib/model/UserManager.js";
+import { User } from "../lib/model/User.js";
 
 describe("R01-H02-LogIn",function(){
     let authManager = new AuthManager();
