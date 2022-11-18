@@ -15,9 +15,11 @@ describe("R01-H01-RegisterUser", function(){
     })
 
     it("registerUser_nonExistentUser_userAdded", function(){
+        expect(userManager.getUser(email)).toBeNull();
+        
         let newUser = userManager.registerUser(email, password);
-
-        expect(newUser).not.toBe(undefined);
+        expect(userManager.getUser(email)).toBe(email);
+        expect(newUser.getEmail()).toBe(email);
     })
 
     it("registerUser_existentUser_UserAlreadyExistsException", function(){
