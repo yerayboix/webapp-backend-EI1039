@@ -21,7 +21,7 @@ describe('R01-H3-UserLogOut', () => {
         expect(am.isLoggedIn(loggedUser)).toEqual(true);
 
         am.logout();
-        expect(am.isLoggedIn(loggedUser).toEqual(false));
+        expect(am.isLoggedIn(loggedUser)).toEqual(false);
     });
 
     it('e2_Sin_Usuarios_MAL', () => {
