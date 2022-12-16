@@ -1,4 +1,7 @@
 import {UserManager} from '../lib/model/UserManager.js';
+import { auth } from '../config/firebase.js';
+import { db } from '../config/firebase.js';
+
 
 describe("R01-H01-RegisterUser", function(){
     let email;
@@ -7,11 +10,11 @@ describe("R01-H01-RegisterUser", function(){
 
     beforeEach(function(){
         email = "test@uji.es";
-        password = "1234";
+        password = "123456";
     })
 
     afterAll(function(){
-        userManager.deleteUser(email);
+        //userManager.deleteUser(email);
     })
 
     it("registerUser_nonExistentUser_userAdded", function(){
