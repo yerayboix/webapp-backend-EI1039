@@ -15,21 +15,25 @@ expressApp.listen(port, () => {
     console.log(`Example expressApp listening on port ${port}`)
   })
 
-expressApp.post('/user', (req, res) => {
+expressApp.post('/user', async (req, res) => {
+    let resultjson = {
+        mssg: '',
+    };
+
     try {
-        userManager.registerUser(req.body.email, req.body.password);
-        let success = {
-            mssg: 'Success',
-        };
-        //Enviamos a frontend que todo ha salido bien
-        res.send(JSON.stringify(success));
+        let result = await userManager.registerUser(req.body.email, req.body.password);
+        console.log(result);
+        resultjson.mssg = result;
+        res.send(JSON.stringify(resultjson));
+
+
     } catch (error) {
-        let err = {
-            mssg: error.message,
-        };
-        //Enviamos que algo ha fallado
-        res.send(JSON.stringify(err));
+        console.log(error);
+        resultjson.mssg = error;
+        res.send(JSON.stringify(resultjson));
     }
+
+        //Enviamos a frontend el resultado de la peticion
 })
 
 export default expressApp;
