@@ -11,7 +11,7 @@ describe('R01-H04-ChangePassword', function(){
 
     beforeEach(function(){
         email = "test@uji.es";
-        password = "1234";
+        password = "123456";
         userManager.registerUser(email, password);
         user = userManager.getUser(email);
     })
