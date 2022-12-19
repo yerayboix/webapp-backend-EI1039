@@ -38,4 +38,20 @@ describe("R01-H01-RegisterUser", function(){
         }
     });
 
+    it("registerUser_nonExistentUser_InvalidPasswordException", async function(){
+        try {
+            await userManager.registerUser('test2@uji.es', '12');
+        } catch (error) {
+            expect(error).toBe('InvalidPassword');
+        }
+    });
+
+    it("registerUser_nonExistentUser_InvalidEmailException", async function(){
+        try {
+            await userManager.registerUser('test2uji', password);
+        } catch (error) {
+            expect(error).toBe('InvalidEmail');
+        }
+    });
+
 })
