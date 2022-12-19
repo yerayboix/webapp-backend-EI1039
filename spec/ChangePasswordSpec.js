@@ -4,9 +4,9 @@ import { auth } from '../config/firebase.js';
 import { User } from "../lib/model/User.js";
 import { db } from '../config/firebase.js';
 
-describe('R01-H04-ChangePassword', function(){ 
-    let email;
-    let password;
+describe('R01-H04-ChangePassword', function(){
+    let email; 
+    let uid;
     let authenticatorManager = new AuthManager();
     let user;
     let userManager = new UserManager();
@@ -35,20 +35,16 @@ describe('R01-H04-ChangePassword', function(){
     });
 
     it("changePassword_validPassword_passwordChanged", async function(){
-        let newPassword = "1234567";
-        user = authenticatorManager.login(email, password);
-
-        expect(authenticatorManager.isLoggedIn()).toEqual(true);
-        user.setPassword(newPassword);
-
-        expect(user.getPassword()).toEqual(newPassword);
+        let response = await userManager.changePassword(uid, "1234567");
+        expect(response).toEqual('Success');
     })
 
     
-    it("changePassword_invalidPassword_InvalidPasswordException", function(){
-        user = authenticatorManager.login(email, password);
-
-        expect(authenticatorManager.isLoggedIn()).toEqual(true);
-        expect(function(){ user.setPassword(password); }).toThrow(new Error("InvalidPassword"));
+    it("changePassword_invalidPassword_InvalidPasswordException", async function(){
+        try {
+            await userManager.changePassword(uid, "1234");
+        } catch (error) {
+            expect(error).toBe('InvalidPassword');
+        }
     })
  })
