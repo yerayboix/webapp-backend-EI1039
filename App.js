@@ -20,6 +20,7 @@ expressApp.post('/user', async (req, res) => {
         mssg: '',
     };
 
+    //Enviamos a frontend el resultado de la peticion
     try {
         let result = await userManager.registerUser(req.body.email, req.body.password);
         console.log(result);
@@ -33,7 +34,6 @@ expressApp.post('/user', async (req, res) => {
         res.send(JSON.stringify(resultjson));
     }
 
-        //Enviamos a frontend el resultado de la peticion
 })
 
 export default expressApp;
