@@ -1,35 +1,59 @@
-import { AuthManager } from '../lib/model/AuthManager.js';
-import { UserManager } from '../lib/model/UserManager.js';
+import { UserManager } from "../lib/model/UserManager.js";
+import { auth } from '../config/firebase.js';
+import { db } from '../config/firebase.js';
+
 
 describe('R01-H6-DeleteUser', () => { 
-    let email, password;
-    let am = new AuthManager();
+    let email, password, uid;
     let um = new UserManager();
     
 
-    beforeEach(() => {
-        email = "test@uji.es";
-        password = "1234";
-        um.registerUser(email,password);
+    beforeAll(async function(){
+        await auth.createUser({
+            email: 'test@uji.es',
+            password: '123456'
+        }).then(async (userRecord) => {
+            email = userRecord.email;
+            uid = userRecord.uid;
+            await db.collection('users').doc(uid).set({
+                UID: uid,
+                email: email,
+                servicesByDefault: [true, true, true]
+            })
+        }).catch((error => {
+            console.log(error.message);
+        }))
+    })
+
+    // afterAll(async function(){
+    //     //userManager.deleteUser(email);
+    //     await auth.getUserByEmail('test@uji.es')
+    //     .then(async (userRecord) => {
+    //         auth.deleteUser(userRecord.uid);
+    //         await db.collection('users').doc(userRecord.uid).delete();
+    //     }).catch((error) => {
+    //         //console.log(error);
+    //     })
+    // });
+
+
+    it('e1_deleteUser_oneUserOnSystem_userIsLoggedIn_userDeleted', async () => {
+        try {
+            let response = await um.deleteUser(uid);
+            expect(response).toBe('Success');
+        } catch (error) {
+            console.log(error);
+        }
     });
 
-    afterAll(() => {
-        um.deleteUser(email);
-    });
-
-    it('e1_deleteUser_oneUserOnSystem_userIsLoggedIn_userDeleted', () => {
-        let loggedUser = am.login(email, password);
-        expect(am.isLoggedIn(loggedUser)).toEqual(true);
-
-        um.deleteUser(email);
-        expect(um.getUser(email)).toBeNull();
-    });
-
-    it('e2_deleteUser_noUserOnSystem_SessionNotFoundException', () => {
-        um.deleteUser(email);
-        expect(um.getUser(email)).toBeNull();
-
-        expect(function(){ um.deleteUser(email) }).toThrow(new Error('SessionNotFound'));
+    it('e2_deleteUser_noUserOnSystem_UserNotRegisteredException', async () => {
+        let fakeUid = 'aad22fasfgqe';
+        try {
+            await um.deleteUser(fakeUid);
+        } catch (error) {
+            console.log(error);
+            expect(error).toBe('UserNotRegistered');
+        }
     });
 
 });
