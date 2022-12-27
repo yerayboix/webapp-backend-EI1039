@@ -33,17 +33,38 @@ expressApp.post('/user', async (req, res) => {
         resultjson.mssg = error;
         res.send(JSON.stringify(resultjson));
     }
-
 })
 
 expressApp.post('/profile', async (req,res)=>{
-    let mssg = await userManager.getProfile(req.body.userUID);
-    res.send(JSON.stringify(mssg));
+    let resultjson = {
+        mssg: '',
+    };
+
+    //Enviamos a frontend el resultado de la peticion
+    try {
+        let mssg = await userManager.getProfile(req.body.userUID);
+        res.send(JSON.stringify(mssg));
+    } catch (error) {
+        console.log(error);
+        resultjson.mssg = error;
+        res.send(JSON.stringify(resultjson));
+    }
 })
 
-expressApp.post('/user/password',(req,res)=>{
-    mssg = UserManager.changePassword(req.body.userUID, req.body.newpassword);
-    res.send(JSON.stringify(mssg));
+expressApp.post('/user/password', async (req,res)=>{
+    let resultjson = {
+        mssg: '',
+    };
+
+    //Enviamos a frontend el resultado de la peticion
+    try {
+        resultjson.mssg = await userManager.changePassword(req.body.userUID, req.body.newpassword);
+        res.send(JSON.stringify(resultjson));
+    } catch (error) {
+        console.log(error);
+        resultjson.mssg = error;
+        res.send(JSON.stringify(resultjson));
+    }
   })
 
 export default expressApp;
