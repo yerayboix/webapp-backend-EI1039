@@ -41,4 +41,9 @@ expressApp.post('/profile', async (req,res)=>{
     res.send(JSON.stringify(mssg));
 })
 
+expressApp.post('/user/password',(req,res)=>{
+    mssg = UserManager.changePassword(req.body.userUID, req.body.newpassword);
+    res.send(JSON.stringify(mssg));
+  })
+
 export default expressApp;
