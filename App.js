@@ -36,4 +36,9 @@ expressApp.post('/user', async (req, res) => {
 
 })
 
+expressApp.post('/profile', async (req,res)=>{
+    let mssg = await userManager.getProfile(req.body.userUID);
+    res.send(JSON.stringify(mssg));
+})
+
 export default expressApp;
