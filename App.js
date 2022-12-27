@@ -15,9 +15,8 @@ expressApp.listen(port, () => {
     console.log(`Example expressApp listening on port ${port}`)
 })
 
-expressApp.get('/user',(req,res)=>{
-mssg = UserManager.getProfile(req.body.userUID);
-console.log('data:', mssg);
+expressApp.post('/user', async (req,res)=>{
+let mssg = await userManager.getProfile(req.body.userUID);
 res.send(JSON.stringify(mssg));
 })
 
