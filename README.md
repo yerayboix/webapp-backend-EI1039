@@ -64,6 +64,18 @@ To run the project locally:
    REACT_APP_FIREBASE_MEASUREMENT_ID = G-CH0Z2ZCDCK
    ```
 
+1. Start the backend server with the following command:
+
+   ```
+   $ node app
+   ```
+
+   You can also start the backend server with the nodemon package (restarts the server every time a file is modified) with the following node script command:
+
+   ```
+   $ npm run dev
+   ```
+
 ## External packages used in the project
 
 - [Jasmine](https://jasmine.github.io/index.html). It is the framework for testing JavaScript code.
