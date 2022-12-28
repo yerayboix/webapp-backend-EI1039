@@ -1,12 +1,12 @@
-import { UserManager } from "../lib/model/UserManager.js";
+import { PlaceManager } from "../lib/model/PlaceManager.js";
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe('R02-H05-ChangeAliasToUbication', function(){
+describe('R02-H05-ChangeAliasToPlace', function(){
     let email; 
     let uid;
     let user;
-    let userManager = new UserManager();
+    let pm = new PlaceManager();
 
     beforeAll(async function(){
         await auth.createUser({
@@ -19,7 +19,14 @@ describe('R02-H05-ChangeAliasToUbication', function(){
                 UID: uid,
                 email: email,
                 servicesByDefault: [true, true, true],
-                places : {}
+                places : {
+                    "-0.26,39.96":{
+                        alias:"",
+                        name:"Onda",
+                        services:[true, true, true],
+                        visible:true
+                    },
+                }
             })
         }).catch((error => {
             console.log(error.message);
@@ -37,18 +44,18 @@ describe('R02-H05-ChangeAliasToUbication', function(){
         })
     });
 
-    it("changeAliasToUbication_ubicationInList_aliasChanged", async function(){
-        let response = await userManager.changeAliasToUbication(uid,[ -0.26 , 39.96 ], "casa");
+    it("changeAliasToPlace_placeInList_aliasChanged", async function(){
+        let response = await pm.changeAliasToPlace(uid,[ -0.26 , 39.96 ], "casa");
         expect(response).toEqual('Success');
     })
 
     
-    it("changeAliasToUbication_ubicationNotInList_ubicationNotInListException", async function(){
+    it("changeAliasToPlace_placeNotInList_placeNotInListException", async function(){
         try{
-            await userManager.changeAliasToUbication(uid, [0,0], "AE");
+            await pm.changeAliasToPlace(uid, [0,0], "AE");
             fail("Didn't throw exception");
         }  catch(error){
-            expect(error).toBe('UbicationNotInList');
+            expect(error).toBe('placeNotInList');
         }      
         
     })
