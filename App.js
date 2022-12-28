@@ -2,10 +2,15 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import { UserManager } from './lib/model/UserManager.js';
+import { PlaceManager } from './lib/model/PlaceManager.js';
+import { GeoapifyAdapter } from './lib/adapter/GeoapifyAdapter.js';
 
 const expressApp = express();
 const port = 3000;
 const userManager = new UserManager();
+const pm = new PlaceManager()
+const ga = new GeoapifyAdapter();
+pm.setGeocodingAdapter(ga);
 
 expressApp.use(bodyParser.urlencoded({extended: false}));
 expressApp.use(bodyParser.json());
