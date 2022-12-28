@@ -39,10 +39,11 @@ describe("R01-H04-RegisterUbicationInUserList", function(){
         let response = await userManager.addUbication(uid,[ -0.26 , 39.96 ],"Onda");
         try{
             await userManager.addUbication(uid,[ -0.26 , 39.96 ],"Onda");
+            fail("Didn't throw exception");
         } catch(error){
             expect(error).toBe('UbicationInList');
         }
-        fail("Didn't throw exception");
+        
     });
 
 })
