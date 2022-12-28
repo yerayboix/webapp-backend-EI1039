@@ -52,6 +52,18 @@ To run the project locally:
 
    Both versions of the command are equivalent to each other.
 
+1. Create a local file named ".env" with all the environment variables used in the project. Add the following code inside the file:
+
+   ```
+   REACT_APP_FIREBASE_API_KEY = AIzaSyBUgmYxNNlBjTW5G8Pv30NbVGK9NtpUSb4
+   REACT_APP_FIREBASE_AUTH_DOMAIN = webapp-ei1039-48-2022-23.firebaseapp.com
+   REACT_APP_FIREBASE_PROJECT_ID = webapp-ei1039-48-2022-23
+   REACT_APP_FIREBASE_STORAGE_BUCKET = webapp-ei1039-48-2022-23.appspot.com
+   REACT_APP_FIREBASE_MESSAGING_SENDER_ID = 186487167397
+   REACT_APP_FIREBASE_APP_ID = 1:186487167397:web:afa61abd9e66350473704c
+   REACT_APP_FIREBASE_MEASUREMENT_ID = G-CH0Z2ZCDCK
+   ```
+
 ## External packages used in the project
 
 - [Jasmine](https://jasmine.github.io/index.html). It is the framework for testing JavaScript code.
