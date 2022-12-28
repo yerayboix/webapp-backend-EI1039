@@ -62,6 +62,7 @@ To run the project locally:
    REACT_APP_FIREBASE_MESSAGING_SENDER_ID = 186487167397
    REACT_APP_FIREBASE_APP_ID = 1:186487167397:web:afa61abd9e66350473704c
    REACT_APP_FIREBASE_MEASUREMENT_ID = G-CH0Z2ZCDCK
+   GEOAPIFY_API_KEY = 00c9b33ffa30420db05ac14b7c120c9f
    ```
 
 1. Start the backend server with the following command:
