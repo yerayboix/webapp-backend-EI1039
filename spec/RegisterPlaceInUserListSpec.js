@@ -2,7 +2,7 @@ import {PlaceManager} from '../lib/model/PlaceManager.js';
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe("R01-H04-RegisterUbicationInUserList", function(){
+describe("R01-H04-RegisterPlaceInUserList", function(){
     let email; 
     let uid;
     let user;
@@ -36,7 +36,7 @@ describe("R01-H04-RegisterUbicationInUserList", function(){
        })
     });
 
-    it("addPlace_validUserDataAndNotInList_ubicationAdded", async function(){
+    it("addPlace_validUserDataAndNotInList_placeAdded", async function(){
         let response = await pm.addPlace(uid,[ -0.26 , 39.96 ],"Onda");
         expect(response).toEqual('Success');
     });
