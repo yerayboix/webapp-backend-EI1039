@@ -1,13 +1,10 @@
-import { AuthManager } from "../lib/model/AuthManager.js";
 import { UserManager } from "../lib/model/UserManager.js";
 import { auth } from '../config/firebase.js';
-import { User } from "../lib/model/User.js";
 import { db } from '../config/firebase.js';
 
 describe('R01-H04-ChangePassword', function(){
     let email; 
     let uid;
-    let authenticatorManager = new AuthManager();
     let user;
     let userManager = new UserManager();
 
