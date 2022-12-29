@@ -6,18 +6,20 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
     let pm = new PlaceManager();
     let pasrc = new PlaceAPIServiceResponseConstructor();
     pm.setServiceResponseConstructor(pasrc);
-    let place = new Map();
-    
-    place.set('name', 'Castellon');
-    place.set('alias', '');
-    place.set('services', [true, false, false]);
-    place.set('lat', -0.26);
-    place.set('lon', 39.96);
 
 
     //En estos test se tiene en cuenta que la informacion de las coordenadas estan validadas previamente
     it('e1_getPlaceInfoFromApi_OneActiveAPI_WeatherAPI_NoDetail_ValidResponse', async () => {
+        //Creamos una ubicacion con datos previamente verificados y solo activo WeatherAPI
+        let place = new Map();
+        place.set('name', 'Onda');
+        place.set('alias', '');
+        place.set('services', [true, false, false]);
+        place.set('lat', -0.26);
+        place.set('lon', 39.96);
+
         try {
+            //No queremos detalle
             let needsDetail = false;
             //Pido los datos de la ubicacion 'place' sin detalles
             let result = await pm.getPlaceInfoFromAPIServices(place, needsDetail);
@@ -29,7 +31,16 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
     });
 
     it('e2_getPlaceInfoFromApi_OneActiveAPI_WeatherAPI_Detail_ValidResponse', async () => {
+                //Creamos una ubicacion con datos previamente verificados y solo activo WeatherAPI
+                let place = new Map();
+                place.set('name', 'Onda');
+                place.set('alias', '');
+                place.set('services', [true, false, false]);
+                place.set('lat', -0.26);
+                place.set('lon', 39.96);
+
         try {
+            //Queremos detalle
             let needsDetail = true;
             //Pido los datos de la ubicacion 'place' sin detalles
             let result = await pm.getPlaceInfoFromAPIServices(place, needsDetail);
@@ -40,5 +51,23 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
         }
     });
 
+        it('e3_getPlaceInfoFromApi_OneActiveAPI_CurrentsAPI_ValidResponse', async () => {
+                //Creamos una ubicacion con datos previamente verificados y solo activo CurrentsAPI
+                let place = new Map();
+                place.set('name', 'Onda');
+                place.set('alias', '');
+                place.set('services', [false, true, false]);
+                place.set('lat', -0.26);
+                place.set('lon', 39.96);
+
+        try {
+            //Pido los datos de la ubicacion 'place' sin detalles
+            let result = await pm.getPlaceInfoFromAPIServices(place);
+            //Espero que me devuelva un json con la info de las API y miro que se ha devuelto alguna noticia
+            expect(Object.keys(result.Currents).length).toBeGreaterThan(0);
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
 });
