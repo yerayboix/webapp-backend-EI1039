@@ -55,7 +55,7 @@ describe('R02-H05-ChangeAliasToPlace', function(){
             await pm.changeAliasToPlace(uid, [0,0], "AE");
             fail("Didn't throw exception");
         }  catch(error){
-            expect(error).toBe('placeNotInList');
+            expect(error).toBe('PlaceNotInList');
         }      
         
     })
