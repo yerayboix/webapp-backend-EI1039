@@ -73,4 +73,22 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  expressApp.post('/search/name', async (req,res)=>{
+    let resultjson = {
+        mssg: '',
+        values: [],
+    }
+    console.log("Respuesta "+req.body.searchTerm+" fin respuesta");
+    try{
+        resultjson.values = await pm.getPlaceByName(req.body.searchTerm);
+        resultjson.mssg='Success';
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
