@@ -7,6 +7,11 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
     let pasrc = new PlaceAPIServiceResponseConstructor();
     pm.setServiceResponseConstructor(pasrc);
 
+    beforeEach(() => {
+        pm = new PlaceManager();
+        pasrc = new PlaceAPIServiceResponseConstructor();
+        pm.setServiceResponseConstructor(pasrc);
+    })
 
     //En estos test se tiene en cuenta que la informacion de las coordenadas estan validadas previamente
     it('e1_getPlaceInfoFromApi_OneActiveAPI_WeatherAPI_NoDetail_ValidResponse', async () => {
@@ -15,8 +20,8 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
         place.set('name', 'Onda');
         place.set('alias', '');
         place.set('services', [true, false, false]);
-        place.set('lat', -0.26);
-        place.set('lon', 39.96);
+        place.set('lat', 39.96);
+        place.set('lon', -0.26);
 
         try {
             //No queremos detalle
@@ -36,8 +41,8 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
         place.set('name', 'Onda');
         place.set('alias', '');
         place.set('services', [true, false, false]);
-        place.set('lat', -0.26);
-        place.set('lon', 39.96);
+        place.set('lat', 39.96);
+        place.set('lon', -0.26);
 
         try {
             //Queremos detalle
@@ -57,8 +62,8 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
         place.set('name', 'Onda');
         place.set('alias', '');
         place.set('services', [false, true, false]);
-        place.set('lat', -0.26);
-        place.set('lon', 39.96);
+        place.set('lat', 39.96);
+        place.set('lon', -0.26);
 
         try {
             //Pido los datos de la ubicacion 'place' sin detalles
@@ -75,9 +80,9 @@ describe('R02-H02-PlaceCoordinatesValidation', () => {
         let place = new Map();
         place.set('name', 'Onda');
         place.set('alias', '');
-        place.set('services', [false, true, false]);
-        place.set('lat', -0.26);
-        place.set('lon', 39.96);
+        place.set('services', [false, false, true]);
+        place.set('lat', 39.96);
+        place.set('lon', -0.26);
 
         try {
             //Pido los datos de la ubicacion 'place'
