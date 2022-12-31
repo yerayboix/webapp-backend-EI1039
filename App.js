@@ -74,7 +74,7 @@ expressApp.post('/user/password', async (req,res)=>{
         mssg: '',
     }
     try{
-        resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.alias);
+        resultjson.mssg = await pm.changeAliasToPlace(req.body.userUID, req.body.coordinates, req.body.alias);
         resultjson.mssg='Success';
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
