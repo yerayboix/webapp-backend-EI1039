@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import { UserManager } from './lib/model/UserManager.js';
+import { PlaceAPIServiceResponseConstructor } from './lib/model/PlaceAPIServiceResponseConstructor.js';
 
 const expressApp = express();
 const port = 3000;
@@ -63,6 +64,37 @@ expressApp.post('/user/password', async (req,res)=>{
     } catch (error) {
         console.log(error);
         resultjson.mssg = error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
+  expressApp.post('/place', async (req,res)=>{
+    //Necesita un req con name, services, lat, lon y detail.
+
+    //Devuelve mssg con 'Success' o el mensaje de error y
+
+    //data una array con 3 mapas: OpenWeather, Currents y Ticketmaster
+    
+    //Para más detalle sobre el contenido de estos puedes poner un
+    //console.log en la última prueba de GetPlaceInfoFromApiSpec
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    let place = new Map();
+    place.set('name', req.body.name);
+    place.set('alias', '');
+    place.set('services', req.body.services);
+    place.set('lat', req.body.lat);
+    place.set('lon', req.body.lon);
+    try{
+        resultjson.data = await pm.getPlaceInfoFromAPIServices(place, req.body.detail);
+        resultjson.mssg='Success';
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
         res.send(JSON.stringify(resultjson));
     }
   })
