@@ -73,7 +73,6 @@ expressApp.post('/user/password', async (req,res)=>{
     //Devuelve Succes o mensaje de error.
     let resultjson = {
         mssg: '',
-        data: [],
     }
     try{
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
