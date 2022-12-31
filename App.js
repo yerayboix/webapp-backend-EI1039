@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import { UserManager } from './lib/model/UserManager.js';
-import { PlaceAPIServiceResponseConstructor } from './lib/model/PlaceAPIServiceResponseConstructor.js';
 
 const expressApp = express();
 const port = 3000;
