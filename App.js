@@ -72,4 +72,28 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  expressApp.post('/search/coordinate', async (req,res)=>{
+    let resultjson = {
+        mssg: '',
+        values: [],
+    }
+    let peticion = req.body.searchTerm.split(",");
+    let lat = peticion[1];
+    let lon = peticion[0];
+    console.log(lat + " y " + lon);
+    try{
+        if (Number.isNaN(lat) || Number.isNaN(lon)){
+            throw "Coordinates must be 2 numbers."
+        }
+        resultjson.values = await pm.getPlaceByCoordinates(lat, lon);
+        resultjson.mssg='Success';
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
