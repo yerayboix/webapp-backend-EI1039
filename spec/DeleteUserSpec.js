@@ -18,7 +18,8 @@ describe('R01-H6-DeleteUser', () => {
             await db.collection('users').doc(uid).set({
                 UID: uid,
                 email: email,
-                servicesByDefault: [true, true, true]
+                servicesByDefault: [true, true, true],
+                places: {}
             })
         }).catch((error => {
             console.log(error.message);

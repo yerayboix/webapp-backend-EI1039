@@ -1,10 +1,10 @@
-import { UserManager } from '../lib/model/UserManager.js';
+import { PlaceManager } from '../lib/model/PlaceManager.js';
 import { auth } from "../config/firebase.js";
 import { db } from "../config/firebase.js";
 
-describe('R01-H3-GetUserData', () => {
+describe('R02-H07-RemovePlaceFromList', () => {
     let email, password, uid;
-    let um = new UserManager();
+    let pm = new PlaceManager();
     
     beforeAll(async function(){
         await auth.createUser({
@@ -17,7 +17,16 @@ describe('R01-H3-GetUserData', () => {
                 UID: uid,
                 email: email,
                 servicesByDefault: [true, true, true],
-                places:{}
+                places:{
+                    "-0.26,39.96":{
+                        alias:"casa",
+                        name:"Onda",
+                        services:[true, true, true],
+                        visible:true,
+                        lat: "39.96",
+                        lon: "-0.26"
+                    },
+                }
             })
         }).catch((error => {
             console.log(error.message);
@@ -35,32 +44,17 @@ describe('R01-H3-GetUserData', () => {
         })
     });
 
-    it('e1_getUserData_userExists', async() => {
-        try {
-            let data = await um.getProfile(uid);
-            let userData = {
-                email: email,
-                servicesByDefault: [true, true, true],
-                UID: uid,
-                places:{}
-            }
-            expect(data).toEqual(userData);
-        } catch (error) {
-            console.log('Error en getUserData_userExists: '+error);
-        }
+    it('removePlaceFromList_placeInList_placeRemoved', async() => {
+        let response = await pm.removePlace(uid, [ -0.26 , 39.96 ]);
+        expect(response).toEqual('Success');
     });
 
-    it('e2_getUserData_userNotExists', async() => {        
+    it('removePlaceFromList_placeNotInList_placeNotInListException', async() => {        
         try {
-            let data = await um.getProfile('jashidyudqwdkj123');
-            let userData = {
-                UID: uid,
-                email: email,
-                servicesByDefault: [true, true, true],
-                places:{}
-            }
+            await pm.removePlace(uid, [ 0 , 0 ]);
+            fail("Didn't throw exception");
         } catch (error) {
-            expect(error).toBe('UserNotRegistered');
+            expect(error).toBe('PlaceNotInList');
         }
     });
 });
