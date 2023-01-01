@@ -24,7 +24,9 @@ describe('R02-H05-ChangeAliasToPlace', function(){
                         alias:"",
                         name:"Onda",
                         services:[true, true, true],
-                        visible:true
+                        visible:true,
+                        lat: "39.96",
+                        lon: "-0.26"
                     },
                 }
             })

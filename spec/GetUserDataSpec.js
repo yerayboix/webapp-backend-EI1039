@@ -16,7 +16,8 @@ describe('R01-H3-GetUserData', () => {
             await db.collection('users').doc(uid).set({
                 UID: uid,
                 email: email,
-                servicesByDefault: [true, true, true]
+                servicesByDefault: [true, true, true],
+                places:{}
             })
         }).catch((error => {
             console.log(error.message);
@@ -40,7 +41,8 @@ describe('R01-H3-GetUserData', () => {
             let userData = {
                 email: email,
                 servicesByDefault: [true, true, true],
-                UID: uid
+                UID: uid,
+                places:{}
             }
             expect(data).toEqual(userData);
         } catch (error) {
@@ -54,7 +56,8 @@ describe('R01-H3-GetUserData', () => {
             let userData = {
                 UID: uid,
                 email: email,
-                servicesByDefault: [true, true, true]
+                servicesByDefault: [true, true, true],
+                places:{}
             }
         } catch (error) {
             expect(error).toBe('UserNotRegistered');

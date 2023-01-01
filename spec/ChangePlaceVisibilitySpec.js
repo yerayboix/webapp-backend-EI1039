@@ -22,7 +22,9 @@ describe('R02-H06-ChangePlaceVisibility', () => {
                         alias:"casa",
                         name:"Onda",
                         services:[true, true, true],
-                        visible:false
+                        visible:false,
+                        lat: "39.96",
+                        lon: "-0.26"
                     },
                 }
             })

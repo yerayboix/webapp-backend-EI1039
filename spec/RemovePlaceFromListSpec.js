@@ -22,7 +22,9 @@ describe('R02-H07-RemovePlaceFromList', () => {
                         alias:"casa",
                         name:"Onda",
                         services:[true, true, true],
-                        visible:true
+                        visible:true,
+                        lat: "39.96",
+                        lon: "-0.26"
                     },
                 }
             })
