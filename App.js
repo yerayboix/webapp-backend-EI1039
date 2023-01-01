@@ -183,4 +183,22 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  expressApp.post('/place/visibility', async (req,res)=>{
+    //Pide userUID y coordinates.
+    //Devuelve Succes o mensaje de error.
+    let resultjson = {
+        mssg: '',
+    }
+    try{
+        resultjson.mssg = await pm.changeVisibility(req.body.userUID, req.body.coordinates);
+        resultjson.mssg='Success';
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
