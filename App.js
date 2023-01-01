@@ -20,7 +20,7 @@ expressApp.listen(port, () => {
     console.log(`Example expressApp listening on port ${port}`)
   })
 
-
+//Registrar usuario
 expressApp.post('/user', async (req, res) => {
     let resultjson = {
         mssg: '',
@@ -41,6 +41,7 @@ expressApp.post('/user', async (req, res) => {
     }
 })
 
+//Obtener datos de perfil
 expressApp.post('/profile', async (req,res)=>{
     let resultjson = {
         mssg: '',
@@ -57,6 +58,7 @@ expressApp.post('/profile', async (req,res)=>{
     }
 })
 
+//Cambiar contraseña
 expressApp.post('/user/password', async (req,res)=>{
     let resultjson = {
         mssg: '',
@@ -73,6 +75,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Busqueda en API por nombre
   expressApp.post('/search/name', async (req,res)=>{
     let resultjson = {
         mssg: '',
@@ -91,6 +94,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Busqueda en API por coordenadas
   expressApp.post('/search/coordinate', async (req,res)=>{
     let resultjson = {
         mssg: '',
@@ -115,6 +119,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Devuelve la informacion de la suma de las respuestas de las API activadas
   expressApp.post('/place', async (req,res)=>{
     //Necesita un req con name, services, lat, lon y detail.
 
@@ -146,7 +151,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
-  
+  //Añadir ubicacion a la lista del usuario
   expressApp.post('/place/add', async (req,res)=>{
     //Pide userUID, coordinates y name.
     //Devuelve Succes o mensaje de error.
@@ -164,7 +169,7 @@ expressApp.post('/user/password', async (req,res)=>{
         res.send(JSON.stringify(resultjson));
     }
   })
-
+  //Cambiar alias de una ubicacion
   expressApp.post('/place/alias', async (req,res)=>{
     //Pide userUID, coordinates y alias.
     //Devuelve Succes o mensaje de error.
@@ -183,6 +188,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Cambiar visibilidad de una ubicacion
   expressApp.post('/place/visibility', async (req,res)=>{
     //Pide userUID y coordinates.
     //Devuelve Succes o mensaje de error.
@@ -201,6 +207,7 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Eliminar una ubicacion de la lista del usuario
   expressApp.post('/place/remove', async (req,res)=>{
     //Pide userUID y coordinates.
     //Devuelve Succes o mensaje de error.
