@@ -297,4 +297,29 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+   //Cambiar los servicios por defecto del usuario
+   expressApp.post('/services/default', async (req,res)=>{
+    //Recive un userUID y tres servicios: weatherService, newsService y eventsService
+    //Estos tres tienen que tener el valor true, false o null (null significa que no cambia)
+    //Devuleve Success o mensaje de error.
+
+    let resultjson = {
+        msg: '',
+    };
+
+    let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
+    
+    try{
+        resultjson.mssg = await userManager.changeDefaultAPIServices(req.body.userUID, services);
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+
+
+  })
+
 export default expressApp;

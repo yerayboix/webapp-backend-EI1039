@@ -38,7 +38,7 @@ describe('R04-H03-ChangeDefaultAPIServices', function(){
     });
 
     it("changeDefaultAPIServices_changedCorrectly", async function(){
-        let response = await userManager.changeDefaultAPIServices(uid, [false, false, true]);
+        let response = await userManager.changeDefaultAPIServices(uid, [false, null, true]);
         expect(response).toEqual('Success');
     })
 
