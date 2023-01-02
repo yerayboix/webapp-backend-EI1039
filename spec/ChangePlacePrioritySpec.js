@@ -2,7 +2,7 @@ import {PlaceManager} from '../lib/model/PlaceManager.js';
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe("R03-H04-ChangePlacePriority", function(){
+describe("R03-H04-ChangePlacePrioritySpec", function(){
     let email; 
     let uid;
     let user;
@@ -76,7 +76,7 @@ describe("R03-H04-ChangePlacePriority", function(){
     it("e1_changePlacePriority_oldPriority>newPriority&newPriority=firstOne_change", async function(){
         let placeKey = "-35.93,-5.95";
         let newPriority = 0;
-        pm.changePlacePriority(placeKey, newPriority);
+        await pm.changePlacePriority(placeKey, newPriority, uid);
         let userPlaces = await (await db.collection('users').doc(uid).get()).get('places');
         expect(userPlaces["-35.93,-5.95"].priority).toBe(newPriority);
         expect(userPlaces["-0.26,39.96"].priority).toBe(1);
@@ -84,10 +84,10 @@ describe("R03-H04-ChangePlacePriority", function(){
         expect(userPlaces["-1.11,40.34"].priority).toBe(3);
     });
 
-    it("changePlacePriority_oldPriority<newPriority&newPriority=lastOne_change", async function(){
+    it("e2_changePlacePriority_oldPriority<newPriority&newPriority=lastOne_change", async function(){
         let placeKey = "-0.26,39.96";
         let newPriority = 3;
-        pm.changePlacePriority(placeKey, newPriority);
+        await pm.changePlacePriority(placeKey, newPriority, uid);
         let userPlaces = await (await db.collection('users').doc(uid).get()).get('places');
         expect(userPlaces["-35.93,-5.95"].priority).toBe(2);
         expect(userPlaces["-0.26,39.96"].priority).toBe(newPriority);
@@ -95,20 +95,20 @@ describe("R03-H04-ChangePlacePriority", function(){
         expect(userPlaces["-1.11,40.34"].priority).toBe(1);
     });
 
-    it("changePlacePriority_oldPriority=newPriority_noChange", async function(){
+    it("e3_changePlacePriority_oldPriority=newPriority_noChange", async function(){
         let placeKey = "-0.26,39.96";
         let newPriority = 0;
-        pm.changePlacePriority(placeKey, newPriority);
+        await pm.changePlacePriority(placeKey, newPriority, uid);
         let userPlaces = await (await db.collection('users').doc(uid).get()).get('places');
         expect(userPlaces["-0.26,39.96"].priority).toBe(newPriority);
     });
 
-    it("changePlacePriority_oldPriority<newPriority&newPriority=numberOfPlaces//2_noChange", async function(){
+    it("e4_changePlacePriority_oldPriority<newPriority&newPriority=numberOfPlaces//2_noChange", async function(){
         let placeKey = "-35.93,-5.95";
         let newPriority = 2;
-        pm.changePlacePriority(placeKey, newPriority);
+        await pm.changePlacePriority(placeKey, newPriority, uid);
         let userPlaces = await (await db.collection('users').doc(uid).get()).get('places');
-        expect(userPlaces["-0.26,39.96"].priority).toBe(newPriority);
+        expect(userPlaces["-35.93,-5.95"].priority).toBe(newPriority);
         expect(userPlaces["-1.11,40.34"].priority).toBe(3);
         expect(userPlaces["-0.26,39.96"].priority).toBe(0);
         expect(userPlaces["-0.04,39.99"].priority).toBe(1);
