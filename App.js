@@ -226,4 +226,26 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+   //Cambiar prioridad de los lugares de la lista del usuario
+   expressApp.post('/place/priority', async (req,res)=>{
+    //Pide userUID, newPriority y coordinates (del place a cambiar).
+    //Devuelve Succes o mensaje de error
+    //y los datos de los places reordenados.
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    try{
+        let placeKey = req.body.coordinates[0] + "," + req.body.coordinates[1];
+        resultjson.data = await pm.changePlacePriority(placeKey, req.body.newPriority, req.body.userUID);
+        resultjson.mssg='Success';
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
