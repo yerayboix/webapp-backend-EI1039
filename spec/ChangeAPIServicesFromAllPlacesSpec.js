@@ -79,6 +79,13 @@ describe('R04-H01-ChangeAPIServicesFromAllPlaces', function(){
     })
 
     it("changeAPIServicesFromAllPlaces_noPlacesInList_noPlacesInListException", async function(){
+        await db.collection('users').doc(uid).set({
+            UID: uid,
+            email: email,
+            servicesByDefault: [true, true, true],
+            places: {}
+        })
+        
         try{
             let response = await pm.changeAllAPIServices(uid, [false, null, true]);
             fail("Didn't throw exception");
