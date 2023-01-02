@@ -1,4 +1,4 @@
-import { UserManager } from "../lib/model/UserManager.js";
+import { PlaceManager } from "../lib/model/PlaceManager.js";
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
@@ -6,7 +6,7 @@ describe('R04-H02-ChangeAPIServicesFromPlace', function(){
     let email; 
     let uid;
     let user;
-    let userManager = new UserManager();
+    let pm = new PlaceManager();
 
     beforeAll(async function(){
         await auth.createUser({
@@ -47,13 +47,13 @@ describe('R04-H02-ChangeAPIServicesFromPlace', function(){
     });
 
     it("changeAPIServicesFromPlace_placeInList_servicesChanged", async function(){
-        let response = await userManager.changeDefaultAPIServices(uid, [ -0.26 , 39.96 ] , [false, null, true]);
+        let response = await pm.changeAPIServices(uid, [ -0.26 , 39.96 ] , [false, null, true]);
         expect(response).toEqual('Success');
     })
 
     it("changeAPIServicesFromPlace_placeNotInList_placeNotInListException", async function(){
         try{
-            let response = await userManager.changeDefaultAPIServices(uid, [0,0] , [false, null, true]);
+            let response = await pm.changeAPIServices(uid, [0,0] , [false, null, true]);
             fail("Didn't throw exception");
         }catch(error){
             expect(error).toBe('PlaceNotInList');
