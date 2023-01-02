@@ -274,7 +274,6 @@ expressApp.post('/user/password', async (req,res)=>{
         mssg: '',
         data: [],
     }
-    console.log('ENTRA AL FETCH')
     try{
         let placesUser = await userManager.getProfile(req.body.userUID);
         placesUser = placesUser.places;
