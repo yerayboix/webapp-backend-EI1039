@@ -4,13 +4,16 @@ import cors from 'cors';
 import { UserManager } from './lib/model/UserManager.js';
 import { GeoapifyAdapter } from './lib/adapter/GeoapifyAdapter.js';
 import { PlaceManager } from './lib/model/PlaceManager.js';
+import { PlaceAPIServiceResponseConstructor } from './lib/model/PlaceAPIServiceResponseConstructor.js';
 
 const expressApp = express();
 const port = 3000;
 const userManager = new UserManager();
 const ga = new GeoapifyAdapter();
 const pm = new PlaceManager();
+const srp = new PlaceAPIServiceResponseConstructor();
 pm.setGeocodingAdapter(ga);
+pm.setServiceResponseConstructor(srp);
 
 expressApp.use(bodyParser.urlencoded({extended: false}));
 expressApp.use(bodyParser.json());
@@ -271,22 +274,22 @@ expressApp.post('/user/password', async (req,res)=>{
         mssg: '',
         data: [],
     }
+    console.log('ENTRA AL FETCH')
     try{
-        let placesUser = await userManager.getProfile(userUID);
+        let placesUser = await userManager.getProfile(req.body.userUID);
         placesUser = placesUser.places;
+        console.log(placesUser)
         let finalData = [];
-        
-        Object.keys(placesUser).forEach(async (key)=>{
-            let place = new Map();
-            place.set('name',placesUser[key].name);
-            place.set('alias',placesUser[key].alias);
-            place.set('services',placesUser[key].services);
-            place.set('lat',placesUser[key].lat);
-            place.set('lon',placesUser[key].lon);
-            finalData.push([placesUser[key], await pm.getPlaceInfoFromAPIServices(place, false)]);
-        })
+        for(let place in placesUser){
+            console.log(place)
+            let map = new Map(Object.entries(placesUser[place]));
+            let info = await pm.getPlaceInfoFromAPIServices(map, false);
+            finalData.push([placesUser[place], info]);
+        } 
+
         resultjson.data = finalData;
         resultjson.mssg = 'Success';
+
         res.send(JSON.stringify(resultjson));
     } catch(error){
         console.log(error);
