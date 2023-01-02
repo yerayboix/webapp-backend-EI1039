@@ -160,7 +160,6 @@ expressApp.post('/user/password', async (req,res)=>{
     }
     try{
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
-        resultjson.mssg='Success';
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
@@ -178,7 +177,6 @@ expressApp.post('/user/password', async (req,res)=>{
     }
     try{
         resultjson.mssg = await pm.changeAliasToPlace(req.body.userUID, req.body.coordinates, req.body.alias);
-        resultjson.mssg='Success';
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
@@ -197,7 +195,6 @@ expressApp.post('/user/password', async (req,res)=>{
     }
     try{
         resultjson.mssg = await pm.changeVisibility(req.body.userUID, req.body.coordinates);
-        resultjson.mssg='Success';
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
@@ -216,10 +213,82 @@ expressApp.post('/user/password', async (req,res)=>{
     }
     try{
         resultjson.mssg = await pm.removePlace(req.body.userUID, req.body.coordinates);
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
+   //Cambiar prioridad de los lugares de la lista del usuario
+   expressApp.post('/place/priority', async (req,res)=>{
+    //Pide userUID, newPriority y coordinates (del place a cambiar).
+    //Devuelve Succes o mensaje de error
+    //y los datos de los places reordenados.
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    try{
+        let placeKey = req.body.coordinates[0] + "," + req.body.coordinates[1];
+        resultjson.data = await pm.changePlacePriority(placeKey, req.body.newPriority, req.body.userUID);
         resultjson.mssg='Success';
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
+  //Ordenar las ubicaciones del usuario según proximidad
+  expressApp.post('/place/proximity', async (req,res)=>{
+    //Pide userUID y coordinates (del usuario).
+    //Devuelve mensaje con Success o el mensaje de error
+    //y array de las claves primarias de las ubicaciones del usuario, ordenadas.
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    try{
+        resultjson.data = await pm.orderByProximity(req.body.userUID, req.body.coordinates);
+        resultjson.mssg = 'Success';
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
+  expressApp.post('/places/all', async (req,res)=>{
+    //Pide userUID
+    //Devuleve Success o mensaje de error.
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    try{
+        let placesUser = await userManager.getProfile(userUID);
+        placesUser = placesUser.places;
+        let finalData = [];
+        
+        Object.keys(placesUser).forEach(async (key)=>{
+            let place = new Map();
+            place.set('name',placesUser[key].name);
+            place.set('alias',placesUser[key].alias);
+            place.set('services',placesUser[key].services);
+            place.set('lat',placesUser[key].lat);
+            place.set('lon',placesUser[key].lon);
+            finalData.push([placesUser[key], await pm.getPlaceInfoFromAPIServices(place, false)]);
+        })
+        resultjson.data = finalData;
+        resultjson.mssg = 'Success';
+        res.send(JSON.stringify(resultjson));
+    } catch(error){
         console.log(error);
         resultjson.mssg=error;
         res.send(JSON.stringify(resultjson));
