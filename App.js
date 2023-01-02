@@ -242,4 +242,35 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  expressApp.post('/places/all', async (req,res)=>{
+    //Pide userUID
+    //Devuleve Success o mensaje de error.
+    let resultjson = {
+        mssg: '',
+        data: [],
+    }
+    try{
+        let placesUser = await userManager.getProfile(userUID);
+        placesUser = placesUser.places;
+        let finalData = [];
+        
+        Object.keys(placesUser).forEach(async (key)=>{
+            let place = new Map();
+            place.set('name',placesUser[key].name);
+            place.set('alias',placesUser[key].alias);
+            place.set('services',placesUser[key].services);
+            place.set('lat',placesUser[key].lat);
+            place.set('lon',placesUser[key].lon);
+            finalData.push([placesUser[key], await pm.getPlaceInfoFromAPIServices(place, false)]);
+        })
+        resultjson.data = finalData;
+        resultjson.mssg = 'Success';
+        res.send(JSON.stringify(resultjson));
+    } catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
