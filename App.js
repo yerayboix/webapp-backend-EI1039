@@ -314,4 +314,28 @@ expressApp.post('/user/password', async (req,res)=>{
     }
   })
 
+  //Cambiar los servicios del place del usuario
+  expressApp.post('/services/place', async (req,res)=>{
+    //Recive un userUID, las lat (latitud), la lon (longitud) 
+    //y tres servicios: weatherService, newsService y eventsService
+    //Estos tres tienen que tener el valor true, false o null (null significa que no cambia)
+    //Devuleve Success o mensaje de error.
+
+    let resultjson = {
+        msg: '',
+    };
+
+    let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
+    
+    try{
+        resultjson.mssg = await pm.changeAPIServices(req.body.userUID, [req.body.lon,req.body.lat], services);
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
 export default expressApp;
