@@ -88,7 +88,6 @@ expressApp.post('/user/password', async (req,res)=>{
     try{
         resultjson.values = await pm.getPlaceByName(req.body.searchTerm);
         resultjson.mssg='Success';
-        console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
         console.log(error);
@@ -160,9 +159,27 @@ expressApp.post('/user/password', async (req,res)=>{
     //Devuelve Succes o mensaje de error.
     let resultjson = {
         mssg: '',
+        apiData: '',
+        place: ''
     }
     try{
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
+        let place = new Map();
+        place.set('name', req.body.name)
+        place.set('alias', '')
+        place.set('services', [true, true, true])
+        place.set('visible', true)
+        place.set('lat', req.body.coordinates[1])
+        place.set('lon', req.body.coordinates[0])
+        resultjson.place = {
+            'name': req.body.name,
+            'alias': '',
+            'services': [true, true, true],
+            'visible': true,
+            'lat': req.body.coordinates[1],
+            'lon': req.body.coordinates[0]
+        };
+        resultjson.apiData = await pm.getPlaceInfoFromAPIServices(place, false);
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
@@ -274,7 +291,6 @@ expressApp.post('/user/password', async (req,res)=>{
         mssg: '',
         data: [],
     }
-    console.log('ENTRA AL FETCH')
     try{
         let placesUser = await userManager.getProfile(req.body.userUID);
         placesUser = placesUser.places;
