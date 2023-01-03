@@ -2,7 +2,7 @@ import { PlaceManager } from "../lib/model/PlaceManager.js";
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe('R02-H05-ChangeAliasToPlace', function(){
+describe('R03-H02-OrderByProximity', function(){
     let email; 
     let uid;
     let user;
