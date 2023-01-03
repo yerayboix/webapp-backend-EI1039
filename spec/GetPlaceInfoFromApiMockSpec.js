@@ -1,20 +1,33 @@
-import { OpenWeatherAdapter } from "../lib/adapter/OpenWeatherAdapter.js";
 import { PlaceAPIServiceResponseConstructor } from "../lib/model/PlaceAPIServiceResponseConstructor.js";
 import { PlaceManager } from "../lib/model/PlaceManager.js";
+import { OpenWeatherMock } from "./mocks/OpenWeatherMock.js";
+import { CurrentsMock } from "./mocks/CurrentsMock.js";
+import { TicketmasterMock } from "./mocks/TicketmasterMock.js";
 
-describe('R02-H03-GetPlaceInfoFromApi', () => {
+describe('R02-H03-GetPlaceInfoFromApiMock', () => {
     let pm = new PlaceManager();
     let pasrc = new PlaceAPIServiceResponseConstructor();
     pm.setServiceResponseConstructor(pasrc);
 
-    beforeEach(() => {
-        pm = new PlaceManager();
-        pasrc = new PlaceAPIServiceResponseConstructor();
+    beforeEach(()=>{
+        let pm = new PlaceManager();
+        let pasrc = new PlaceAPIServiceResponseConstructor();
         pm.setServiceResponseConstructor(pasrc);
-    })
 
-    //En estos test se tiene en cuenta que la informacion de las coordenadas estan validadas previamente
-    it('e1_getPlaceInfoFromApi_OneActiveAPI_WeatherAPI_NoDetail_ValidResponse', async () => {
+        let weather = new OpenWeatherMock();
+        let news = new CurrentsMock();
+        let events = new TicketmasterMock();
+
+        weather.stepsTemplate = jasmine.createSpy("stepsWeather").and.returnValues({'key1':'', 'key2':'', 'key3':''});
+        news.stepsTemplate = jasmine.createSpy("stepsNews").and.returnValues({'key1':'', 'key2':'', 'key3':''});
+        events.stepsTemplate = jasmine.createSpy("stepsEvents").and.returnValues({'key1':'', 'key2':'', 'key3':''});
+
+        pasrc.setWeather();
+        pasrc.setNews();
+        pasrc.setEvents();
+    });
+
+    it("getPlaceInfoFromApiMock_onlyWeather_validResponse", async ()=>{
         //Creamos una ubicacion con datos previamente verificados y solo activo WeatherAPI
         let place = new Map();
         place.set('name', 'Onda');
@@ -35,28 +48,7 @@ describe('R02-H03-GetPlaceInfoFromApi', () => {
         }
     });
 
-    it('e2_getPlaceInfoFromApi_OneActiveAPI_WeatherAPI_Detail_ValidResponse', async () => {
-        //Creamos una ubicacion con datos previamente verificados y solo activo WeatherAPI
-        let place = new Map();
-        place.set('name', 'Onda');
-        place.set('alias', '');
-        place.set('services', [true, false, false]);
-        place.set('lat', 39.96);
-        place.set('lon', -0.26);
-
-        try {
-            //Queremos detalle
-            let needsDetail = true;
-            //Pido los datos de la ubicacion 'place' sin detalles
-            let result = await pm.getPlaceInfoFromAPIServices(place, needsDetail);
-            //Espero que me devuelva un json con la info de las API y miro que la de OpenWeather contiene mas de 3 claves correspondientes al resto de info
-            expect(Object.keys(result.OpenWeather).length).toBeGreaterThan(3);
-        } catch (error) {
-            console.log(error);
-        }
-    });
-
-    it('e3_getPlaceInfoFromApi_OneActiveAPI_CurrentsAPI_ValidResponse', async () => {
+    it("getPlaceInfoFromApiMock_onlyNews_validResponse", async ()=>{
         //Creamos una ubicacion con datos previamente verificados y solo activo CurrentsAPI
         let place = new Map();
         place.set('name', 'Onda');
@@ -76,7 +68,7 @@ describe('R02-H03-GetPlaceInfoFromApi', () => {
         }
     });
 
-    it('e4_getPlaceInfoFromApi_OneActiveAPI_TicketmasterAPI_ValidResponse', async () => {
+    it("getPlaceInfoFromApiMock_onlyEvents_validResponse", async ()=>{
         //Creamos una ubicacion con datos previamente verificados y solo activo Ticketmaster
         let place = new Map();
         place.set('name', 'Onda');
@@ -96,7 +88,7 @@ describe('R02-H03-GetPlaceInfoFromApi', () => {
         }
     });
 
-    it('e5_getPlaceInfoFromApi_AllActiveAPI_ValidResponse', async () => {
+    it("getPlaceInfoFromApiMock_all_validResponse", async ()=>{
         //Creamos una ubicacion con datos previamente verificados y activamos todas las API
         let place = new Map();
         place.set('name', 'Onda');
