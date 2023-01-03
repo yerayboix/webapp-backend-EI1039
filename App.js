@@ -181,19 +181,19 @@ expressApp.post('/user/password', async (req,res)=>{
         place: ''
     }
     try{
-        let servicesByDefault = await userManager.getProfile(req.body.userUID).servicesByDefault;
+        let user = await userManager.getProfile(req.body.userUID);
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
         let place = new Map();
         place.set('name', req.body.name)
         place.set('alias', '')
-        place.set('services', servicesByDefault)
+        place.set('services', user.servicesByDefault)
         place.set('visible', true)
         place.set('lat', req.body.coordinates[1])
         place.set('lon', req.body.coordinates[0])
         resultjson.place = {
             'name': req.body.name,
             'alias': '',
-            'services': servicesByDefault,
+            'services': user.servicesByDefault,
             'visible': true,
             'lat': req.body.coordinates[1],
             'lon': req.body.coordinates[0]
