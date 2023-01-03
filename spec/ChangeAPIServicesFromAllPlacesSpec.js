@@ -2,7 +2,7 @@ import { PlaceManager } from "../lib/model/PlaceManager.js";
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe('R03-H02-OrderByProximity', function(){
+describe('R04-H01-ChangeAPIServicesFromAllPlaces', function(){
     let email; 
     let uid;
     let user;
@@ -19,15 +19,14 @@ describe('R03-H02-OrderByProximity', function(){
                 UID: uid,
                 email: email,
                 servicesByDefault: [true, true, true],
-                places : {
+                places: {
                     "-0.26,39.96":{
                         alias:"",
                         name:"Onda",
                         services:[true, true, true],
                         visible:true,
                         lat: "39.96",
-                        lon: "-0.26",
-                        priority: 0
+                        lon: "-0.26"
                     },
                     "-0.04,39.99":{
                         alias:"",
@@ -37,6 +36,24 @@ describe('R03-H02-OrderByProximity', function(){
                         lat: "39.99",
                         lon: "-0.04",
                         priority: 1
+                    },
+                    "-1.11,40.34": {
+                        alias:"",
+                        name:"Teruel",
+                        services:[true, true, true],
+                        visible:true,
+                        lat: "40.34",
+                        lon: "-1.11",
+                        priority: 2
+                    },
+                    "-35.93,-5.95": {
+                        alias:"",
+                        name:"Barcelona",
+                        services:[true, true, true],
+                        visible:true,
+                        lat: "-5.95",
+                        lon: "-35.93",
+                        priority: 3
                     },
                 }
             })
@@ -56,12 +73,26 @@ describe('R03-H02-OrderByProximity', function(){
         })
     });
 
-    it("orderByProximity_orderedCorrectly", async function(){
-        let origin = {
-            lat: "39.86",
-            lon: "-0.17"
-        }
-        let response = await pm.orderByProximity(uid, origin);
-        expect(response).toEqual(["-0.26,39.96","-0.04,39.99"]);
+    it("changeAPIServicesFromAllPlaces_placesInList_servicesChanged", async function(){
+        let response = await pm.changeAllAPIServices(uid, [false, null, true]);
+        expect(response).toEqual('Success');
     })
+
+    it("changeAPIServicesFromAllPlaces_noPlacesInList_noPlacesInListException", async function(){
+        await db.collection('users').doc(uid).set({
+            UID: uid,
+            email: email,
+            servicesByDefault: [true, true, true],
+            places: {}
+        })
+        
+        try{
+            let response = await pm.changeAllAPIServices(uid, [false, null, true]);
+            fail("Didn't throw exception");
+        }catch(error){
+            expect(error).toBe('NoPlacesInList');
+        }
+        
+    })
+
  })

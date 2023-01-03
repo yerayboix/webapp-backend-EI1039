@@ -2,7 +2,7 @@ import { PlaceManager } from "../lib/model/PlaceManager.js";
 import { auth } from '../config/firebase.js';
 import { db } from '../config/firebase.js';
 
-describe('R03-H02-OrderByProximity', function(){
+describe('R04-H02-ChangeAPIServicesFromPlace', function(){
     let email; 
     let uid;
     let user;
@@ -19,24 +19,14 @@ describe('R03-H02-OrderByProximity', function(){
                 UID: uid,
                 email: email,
                 servicesByDefault: [true, true, true],
-                places : {
+                places: {
                     "-0.26,39.96":{
                         alias:"",
                         name:"Onda",
                         services:[true, true, true],
                         visible:true,
                         lat: "39.96",
-                        lon: "-0.26",
-                        priority: 0
-                    },
-                    "-0.04,39.99":{
-                        alias:"",
-                        name:"Castelló de la Plana",
-                        services:[true, true, true],
-                        visible:true,
-                        lat: "39.99",
-                        lon: "-0.04",
-                        priority: 1
+                        lon: "-0.26"
                     },
                 }
             })
@@ -56,12 +46,19 @@ describe('R03-H02-OrderByProximity', function(){
         })
     });
 
-    it("orderByProximity_orderedCorrectly", async function(){
-        let origin = {
-            lat: "39.86",
-            lon: "-0.17"
-        }
-        let response = await pm.orderByProximity(uid, origin);
-        expect(response).toEqual(["-0.26,39.96","-0.04,39.99"]);
+    it("changeAPIServicesFromPlace_placeInList_servicesChanged", async function(){
+        let response = await pm.changeAPIServices(uid, [ -0.26 , 39.96 ] , [false, null, true]);
+        expect(response).toEqual('Success');
     })
+
+    it("changeAPIServicesFromPlace_placeNotInList_placeNotInListException", async function(){
+        try{
+            let response = await pm.changeAPIServices(uid, [0,0] , [false, null, true]);
+            fail("Didn't throw exception");
+        }catch(error){
+            expect(error).toBe('PlaceNotInList');
+        }
+        
+    })
+
  })

@@ -4,13 +4,16 @@ import cors from 'cors';
 import { UserManager } from './lib/model/UserManager.js';
 import { GeoapifyAdapter } from './lib/adapter/GeoapifyAdapter.js';
 import { PlaceManager } from './lib/model/PlaceManager.js';
+import { PlaceAPIServiceResponseConstructor } from './lib/model/PlaceAPIServiceResponseConstructor.js';
 
 const expressApp = express();
 const port = 3000;
 const userManager = new UserManager();
 const ga = new GeoapifyAdapter();
 const pm = new PlaceManager();
+const srp = new PlaceAPIServiceResponseConstructor();
 pm.setGeocodingAdapter(ga);
+pm.setServiceResponseConstructor(srp);
 
 expressApp.use(bodyParser.urlencoded({extended: false}));
 expressApp.use(bodyParser.json());
@@ -85,7 +88,6 @@ expressApp.post('/user/password', async (req,res)=>{
     try{
         resultjson.values = await pm.getPlaceByName(req.body.searchTerm);
         resultjson.mssg='Success';
-        console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
         console.log(error);
@@ -157,9 +159,27 @@ expressApp.post('/user/password', async (req,res)=>{
     //Devuelve Succes o mensaje de error.
     let resultjson = {
         mssg: '',
+        apiData: '',
+        place: ''
     }
     try{
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
+        let place = new Map();
+        place.set('name', req.body.name)
+        place.set('alias', '')
+        place.set('services', [true, true, true])
+        place.set('visible', true)
+        place.set('lat', req.body.coordinates[1])
+        place.set('lon', req.body.coordinates[0])
+        resultjson.place = {
+            'name': req.body.name,
+            'alias': '',
+            'services': [true, true, true],
+            'visible': true,
+            'lat': req.body.coordinates[1],
+            'lon': req.body.coordinates[0]
+        };
+        resultjson.apiData = await pm.getPlaceInfoFromAPIServices(place, false);
         console.log(resultjson)
         res.send(JSON.stringify(resultjson));
     }catch(error){
@@ -272,23 +292,71 @@ expressApp.post('/user/password', async (req,res)=>{
         data: [],
     }
     try{
-        let placesUser = await userManager.getProfile(userUID);
+        let placesUser = await userManager.getProfile(req.body.userUID);
         placesUser = placesUser.places;
+        console.log(placesUser)
         let finalData = [];
-        
-        Object.keys(placesUser).forEach(async (key)=>{
-            let place = new Map();
-            place.set('name',placesUser[key].name);
-            place.set('alias',placesUser[key].alias);
-            place.set('services',placesUser[key].services);
-            place.set('lat',placesUser[key].lat);
-            place.set('lon',placesUser[key].lon);
-            finalData.push([placesUser[key], await pm.getPlaceInfoFromAPIServices(place, false)]);
-        })
+        for(let place in placesUser){
+            console.log(place)
+            let map = new Map(Object.entries(placesUser[place]));
+            let info = await pm.getPlaceInfoFromAPIServices(map, false);
+            finalData.push([placesUser[place], info]);
+        } 
+
         resultjson.data = finalData;
         resultjson.mssg = 'Success';
+
         res.send(JSON.stringify(resultjson));
     } catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+  })
+
+   //Cambiar los servicios por defecto del usuario
+   expressApp.post('/services/default', async (req,res)=>{
+    //Recive un userUID y tres servicios: weatherService, newsService y eventsService
+    //Estos tres tienen que tener el valor true, false o null (null significa que no cambia)
+    //Devuleve Success o mensaje de error.
+
+    let resultjson = {
+        msg: '',
+    };
+
+    let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
+    
+    try{
+        resultjson.mssg = await userManager.changeDefaultAPIServices(req.body.userUID, services);
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+
+
+  })
+
+  //Cambiar los servicios del place del usuario
+  expressApp.post('/services/place', async (req,res)=>{
+    //Recive un userUID, las lat (latitud), la lon (longitud) 
+    //y tres servicios: weatherService, newsService y eventsService
+    //Estos tres tienen que tener el valor true, false o null (null significa que no cambia)
+    //Devuleve Success o mensaje de error.
+
+    let resultjson = {
+        msg: '',
+    };
+
+    let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
+    
+    try{
+        resultjson.mssg = await pm.changeAPIServices(req.body.userUID, [req.body.lon,req.body.lat], services);
+        console.log(resultjson)
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
         console.log(error);
         resultjson.mssg=error;
         res.send(JSON.stringify(resultjson));
