@@ -321,7 +321,7 @@ expressApp.post('/user/password', async (req,res)=>{
     //Devuleve Success o mensaje de error.
 
     let resultjson = {
-        msg: '',
+        mssg: '',
     };
 
     let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
@@ -347,7 +347,7 @@ expressApp.post('/user/password', async (req,res)=>{
     //Devuleve Success o mensaje de error.
 
     let resultjson = {
-        msg: '',
+        mssg: '',
     };
 
     let services = [req.body.weatherService, req.body.newsService, req.body.eventsService];
