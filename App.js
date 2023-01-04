@@ -44,6 +44,24 @@ expressApp.post('/user', async (req, res) => {
     }
 })
 
+//Borrar usuario
+expressApp.post('/user/delete', async (req, res) =>{
+    let resultjson = {
+        mssg: '',
+    };
+
+    try{
+        let result = await userManager.deleteUser(req.body.userUID);
+        resultjson.mssg=result;
+        res.send(JSON.stringify(resultjson));
+    }catch(error){
+        console.log(error);
+        resultjson.mssg=error;
+        res.send(JSON.stringify(resultjson));
+    }
+
+})
+
 //Obtener datos de perfil
 expressApp.post('/profile', async (req,res)=>{
     let resultjson = {
@@ -163,18 +181,19 @@ expressApp.post('/user/password', async (req,res)=>{
         place: ''
     }
     try{
+        let user = await userManager.getProfile(req.body.userUID);
         resultjson.mssg = await pm.addPlace(req.body.userUID, req.body.coordinates, req.body.name);
         let place = new Map();
         place.set('name', req.body.name)
         place.set('alias', '')
-        place.set('services', [true, true, true])
+        place.set('services', user.servicesByDefault)
         place.set('visible', true)
         place.set('lat', req.body.coordinates[1])
         place.set('lon', req.body.coordinates[0])
         resultjson.place = {
             'name': req.body.name,
             'alias': '',
-            'services': [true, true, true],
+            'services': user.servicesByDefault,
             'visible': true,
             'lat': req.body.coordinates[1],
             'lon': req.body.coordinates[0]
